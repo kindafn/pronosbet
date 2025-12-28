@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Send, Hash } from 'lucide-react';
 import { Message, ChatRoom } from '@/hooks/useChat';
 import { MessageBubble } from './MessageBubble';
 
@@ -18,6 +19,7 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -46,7 +48,11 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
       <div className="flex-1 flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
+            	<img
+		  src="/logo.png"
+		  alt="Logo"
+		  className="w-8 h-8 object-contain"
+		/>
           </div>
           <h2 className="font-display text-xl text-foreground mb-2">Sélectionnez un salon</h2>
           <p className="text-muted-foreground text-sm">Choisissez un salon pour commencer à discuter</p>
@@ -56,18 +62,20 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-background min-h-0">
+    <div className="flex-1 flex flex-col bg-background">
+    
       {/* Header */}
-      <div className="sticky top-0 z-10 h-17 flex items-center px-6 bg-white">
-      {/* <div className="fixed top-0 left-30 right-2 h-17 flex items-center px-6 bg-white z-50">*/ }  
+        <div className="h-17 flex items-center px-6 bg-white"> 
         <div className="flex items-center gap-3">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-primary/10 rounded-xl flex items-center justify-center">
-            <img
-              src="/logo.png"
-              alt="Logo"
-              className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
-            />
-          </div>
+
+        <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-primary/10 rounded-xl flex items-center justify-center">
+	  <img
+	    src="/logo.png"
+	    alt="Logo"
+	    className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
+	  />
+	</div>
+
           <div>
             <h2 className="font-display font-semibold text-foreground">{room.name}</h2>
             {room.description && (
@@ -77,17 +85,8 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
         </div>
       </div>
 
-      {/* Messages (défilement) */}
-      <div
-        className="flex-1 p-6 overflow-y-auto"
-        ref={scrollRef}
-        onScroll={(e) => {
-          if (e.currentTarget.scrollTop === 0) {
-            // Charger plus d'anciens messages si besoin
-            // loadOlderMessages();
-          }
-        }}
-      >
+      {/* Messages */}
+      <ScrollArea className="flex-1 p-6" ref={scrollRef}>
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -110,17 +109,17 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
             ))}
           </div>
         )}
-      </div>
+      </ScrollArea>
 
-      {/* Input figé en bas */}
-      <div className="sticky bottom-0 p-4 border-t border-border bg-white">
-        <form onSubmit={handleSubmit} className="flex gap-3 justify-center">
+      {/* Input */}
+      <div className="p-4 border-t border-border">
+        <form onSubmit={handleSubmit} className="flex gap-3">
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={` Envoyer un message dans ${room.name}...`}
-            className="w-1/2 text-center"
+            placeholder={`Envoyer un message dans ${room.name}...`}
+            className="flex-1"
             disabled={sending}
           />
           <Button type="submit" disabled={sending || !newMessage.trim()}>
@@ -131,4 +130,3 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
     </div>
   );
 };
-

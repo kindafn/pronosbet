@@ -67,48 +67,44 @@ export const ChatLayout = () => {
 
   const currentRoom = rooms.find(r => r.id === currentRoomId) || null;
 
-  return (
-    <div className="h-screen flex flex-col md:flex-row overflow-hidden">
-      {/* Bouton mobile */}
-      <div className="md:hidden flex justify-between items-center p-2 border-b">
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-xl">
-          ☰
-        </button>
-        <span className="font-bold">Chat</span>
-      </div>
 
-      {/* Sidebar */}
-      <div
-      className={`fixed inset-y-0 left-0 w-64 bg-[hsl(var(--sidebar-background))] z-50 transform transition-transform duration-300 md:relative md:translate-x-0 ${ sidebarOpen ? "translate-x-0" : "-translate-x-full" }`}
-      >
-      
-      <ChatSidebar
-	  rooms={rooms}
-	  currentRoomId={currentRoomId}
-	  onRoomSelect={(roomId) => {
-	    setCurrentRoomId(roomId);
-	    if (window.innerWidth < 768) {
-	      setSidebarOpen(false); // ferme automatiquement sur mobile
-	    }
-	  }}
-	  onCreateRoom={handleCreateRoom}
-	  onSignOut={handleSignOut}
-	  username={username}
-	  closeSidebar={() => setSidebarOpen(false)} // 👈 bouton X ferme la sidebar
-	/>
-      </div>
+	return (
+	  <div className="h-screen flex flex-col md:flex-row overflow-x-hidden">
+	    {/* Bouton mobile */}
+	    <div className="md:hidden flex justify-between items-center p-2 border-b">
+	      <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-xl">☰</button>
+	      <span className="font-bold">Chat</span>
+	    </div>
 
-      {/* Zone de chat */}
-      <div className="flex-1">
-        <ChatArea
-          room={currentRoom}
-          messages={messages}
-          loading={loading}
-          userId={user?.id || ''}
-          onSendMessage={handleSendMessage}
-        />
-      </div>
-    </div>
-  );
+	    {/* Sidebar */}
+	    <div
+	      className={`fixed inset-y-0 left-0 w-64 bg-[hsl(var(--sidebar-background))] z-50 transform transition-transform duration-300 md:relative md:translate-x-0 ${ sidebarOpen ? "translate-x-0" : "-translate-x-full" }`}
+	    >
+	      <ChatSidebar
+		rooms={rooms}
+		currentRoomId={currentRoomId}
+		onRoomSelect={(roomId) => {
+		  setCurrentRoomId(roomId);
+		  if (window.innerWidth < 768) setSidebarOpen(false);
+		}}
+		onCreateRoom={handleCreateRoom}
+		onSignOut={handleSignOut}
+		username={username}
+		closeSidebar={() => setSidebarOpen(false)}
+	      />
+	    </div>
+
+	    {/* Zone de chat */}
+	    <div className="flex-1 min-h-0">
+	      <ChatArea
+		room={currentRoom}
+		messages={messages}
+		loading={loading}
+		userId={user?.id || ''}
+		onSendMessage={handleSendMessage}
+	      />
+	    </div>
+	  </div>
+	);
 };
 

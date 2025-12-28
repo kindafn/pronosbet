@@ -52,10 +52,9 @@ export const ChatSidebar = ({
 
   return (
     <div className="w-full md:w-72 bg-sidebar border-r border-border flex flex-col h-full">
-      {/* Header */}
-      <div className="p-4 border-b border-border flex justify-between items-center">
+      {/* Header fixé */}
+	<div className="sticky top-0 z-10 p-4 border-b border-border flex justify-between items-center bg-sidebar">
         <div className="flex items-center gap-3">
-        
         <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-xl flex items-center justify-center overflow-hidden">
 	  <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
 	</div>
