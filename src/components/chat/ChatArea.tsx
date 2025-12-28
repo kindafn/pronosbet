@@ -63,17 +63,19 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
 
   return (
     <div className="flex-1 flex flex-col bg-background">
+    
       {/* Header */}
-      <div className="h-16 border-b border-border flex items-center px-6">
+        <div className="h-17 flex items-center px-6 bg-white"> 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-            	<img
-		  src="/logo.png"
-		  alt="Logo"
-		  className="w-5 h-5 object-contain"
-		/>
 
-          </div>
+        <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-primary/10 rounded-xl flex items-center justify-center">
+	  <img
+	    src="/logo.png"
+	    alt="Logo"
+	    className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
+	  />
+	</div>
+
           <div>
             <h2 className="font-display font-semibold text-foreground">{room.name}</h2>
             {room.description && (

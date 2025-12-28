@@ -17,6 +17,7 @@ interface ChatSidebarProps {
   onCreateRoom: (name: string, description: string) => Promise<void>;
   onSignOut: () => void;
   username: string;
+  closeSidebar?: () => void; // 👈 ajouté pour bouton X et auto-fermeture
 }
 
 export const ChatSidebar = ({
@@ -26,6 +27,7 @@ export const ChatSidebar = ({
   onCreateRoom,
   onSignOut,
   username,
+  closeSidebar, // 👈 utilisé dans le JSX
 }: ChatSidebarProps) => {
   const [newRoomName, setNewRoomName] = useState("");
   const [newRoomDescription, setNewRoomDescription] = useState("");
@@ -49,18 +51,30 @@ export const ChatSidebar = ({
   };
 
   return (
-    <div className="w-72 bg-sidebar border-r border-border flex flex-col h-full">
+    <div className="w-full md:w-72 bg-sidebar border-r border-border flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 border-b border-border">
+      <div className="p-4 border-b border-border flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-          </div>
+        
+        <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-xl flex items-center justify-center overflow-hidden">
+	  <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+	</div>
+
           <div>
-            <h1 className="font-display font-semibold text-foreground">iPP</h1>
-            <p className="text-xs text-muted-foreground">international Public Pronostic</p>
+            <h1 className="font-display font-semibold text-foreground">ZP</h1>
+            <p className="text-xs text-muted-foreground">🎯 Zone Parieurs</p>
           </div>
         </div>
+
+        {/* Bouton X (mobile seulement) */}
+        {closeSidebar && (
+          <button
+            onClick={closeSidebar}
+            className="md:hidden text-muted-foreground hover:text-destructive"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {/* Rooms List */}
@@ -120,7 +134,13 @@ export const ChatSidebar = ({
             {rooms.map((room) => (
               <button
                 key={room.id}
-                onClick={() => onRoomSelect(room.id)}
+                onClick={() => {
+                  onRoomSelect(room.id);
+                  // Ferme automatiquement la sidebar sur mobile
+                  if (closeSidebar && window.innerWidth < 768) {
+                    closeSidebar();
+                  }
+                }}
                 className={cn(
                   "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors",
                   currentRoomId === room.id

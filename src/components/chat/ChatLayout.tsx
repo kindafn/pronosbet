@@ -10,6 +10,8 @@ export const ChatLayout = () => {
   const { user, signOut } = useAuth();
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
   const [username, setUsername] = useState('Utilisateur');
+  const [sidebarOpen, setSidebarOpen] = useState(false); // 👈 nouvel état pour mobile
+
   const { messages, rooms, loading, sendMessage, createRoom } = useChat(currentRoomId);
 
   // Fetch user profile
@@ -49,7 +51,7 @@ export const ChatLayout = () => {
     if (!user?.id) return;
     const { error } = await sendMessage(content, user.id);
     if (error) {
-      toast.error('Erreur lors de l\'envoi du message');
+      toast.error("Erreur lors de l'envoi du message");
     }
   };
 
@@ -66,22 +68,47 @@ export const ChatLayout = () => {
   const currentRoom = rooms.find(r => r.id === currentRoomId) || null;
 
   return (
-    <div className="h-screen flex overflow-hidden">
+    <div className="h-screen flex flex-col md:flex-row overflow-hidden">
+      {/* Bouton mobile */}
+      <div className="md:hidden flex justify-between items-center p-2 border-b">
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-xl">
+          ☰
+        </button>
+        <span className="font-bold">Chat</span>
+      </div>
+
+      {/* Sidebar */}
+      <div
+      className={`fixed inset-y-0 left-0 w-64 bg-[hsl(var(--sidebar-background))] z-50 transform transition-transform duration-300 md:relative md:translate-x-0 ${ sidebarOpen ? "translate-x-0" : "-translate-x-full" }`}
+      >
+      
       <ChatSidebar
-        rooms={rooms}
-        currentRoomId={currentRoomId}
-        onRoomSelect={setCurrentRoomId}
-        onCreateRoom={handleCreateRoom}
-        onSignOut={handleSignOut}
-        username={username}
-      />
-      <ChatArea
-        room={currentRoom}
-        messages={messages}
-        loading={loading}
-        userId={user?.id || ''}
-        onSendMessage={handleSendMessage}
-      />
+	  rooms={rooms}
+	  currentRoomId={currentRoomId}
+	  onRoomSelect={(roomId) => {
+	    setCurrentRoomId(roomId);
+	    if (window.innerWidth < 768) {
+	      setSidebarOpen(false); // ferme automatiquement sur mobile
+	    }
+	  }}
+	  onCreateRoom={handleCreateRoom}
+	  onSignOut={handleSignOut}
+	  username={username}
+	  closeSidebar={() => setSidebarOpen(false)} // 👈 bouton X ferme la sidebar
+	/>
+      </div>
+
+      {/* Zone de chat */}
+      <div className="flex-1">
+        <ChatArea
+          room={currentRoom}
+          messages={messages}
+          loading={loading}
+          userId={user?.id || ''}
+          onSendMessage={handleSendMessage}
+        />
+      </div>
     </div>
   );
 };
+
