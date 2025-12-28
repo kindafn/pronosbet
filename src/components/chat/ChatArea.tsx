@@ -59,7 +59,6 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
     <div className="flex-1 flex flex-col bg-background min-h-0">
       {/* Header */}
       <div className="sticky top-0 z-10 h-17 flex items-center px-6 bg-white">
-      {/* <div className="fixed top-0 left-30 right-2 h-17 flex items-center px-6 bg-white z-50">*/ }  
         <div className="flex items-center gap-3">
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-primary/10 rounded-xl flex items-center justify-center">
             <img
@@ -100,7 +99,7 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6 px-4">
             {messages.map((message) => (
               <MessageBubble
                 key={message.id}
@@ -113,14 +112,14 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
       </div>
 
       {/* Input figé en bas */}
-      <div className="sticky bottom-0 p-4 border-t border-border bg-white">
+      <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-border bg-white z-50">
         <form onSubmit={handleSubmit} className="flex gap-3 justify-center">
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={` Envoyer un message dans ${room.name}...`}
-            className="w-1/2 text-center"
+            className="w-full md:w-[70%] ml-auto text-center"
             disabled={sending}
           />
           <Button type="submit" disabled={sending || !newMessage.trim()}>

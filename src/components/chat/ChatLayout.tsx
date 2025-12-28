@@ -69,6 +69,7 @@ export const ChatLayout = () => {
 
 
 	return (
+	
 	  <div className="h-screen flex flex-col md:flex-row overflow-x-hidden">
 	    {/* Bouton mobile */}
 	    <div className="md:hidden flex justify-between items-center p-2 border-b">
