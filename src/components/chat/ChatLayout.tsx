@@ -102,8 +102,8 @@ export const ChatLayout = () => {
 
 
       {/* Zone de chat */}
+      <div className="flex-1 min-h-0 w-[90%] mx-auto md:w-[70%]">
       
-      <div className="flex-1 min-h-0 w-[90%] mx-auto md:w-full">
         <ChatArea
           room={currentRoom}
           messages={messages}

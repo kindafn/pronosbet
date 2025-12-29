@@ -30,7 +30,7 @@ export const MessageBubble = ({ message, isOwn }: MessageBubbleProps) => {
       </div>
 
       {/* Message Content */}
-      <div className={cn("flex flex-col max-w-[70%] sm:max-w-[80%]", isOwn ? "items-end" : "items-start")}>
+      <div className={cn("flex flex-col max-w-[60%] sm:max-w-[70%]", isOwn ? "items-end" : "items-start")}>
         <div className="flex items-center gap-1 sm:gap-2 mb-1">
           <span
             className={cn(

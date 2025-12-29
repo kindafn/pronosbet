@@ -4,6 +4,7 @@ import { Send, ChevronDown, Smile, Paperclip, Mic } from 'lucide-react';
 import { Message, ChatRoom } from '@/hooks/useChat';
 import { MessageBubble } from './MessageBubble';
 
+
 interface ChatAreaProps {
   room: ChatRoom | null;
   messages: Message[];
