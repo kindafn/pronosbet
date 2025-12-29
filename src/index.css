@@ -12,10 +12,10 @@
     --card-foreground: 220 20% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 10%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 20% 20%;
+    --primary: 142, 70%, 42%;
+    --primary-foreground:  0, 0%, 100%;
+    --secondary: 181, 90%, 20%;
+    --secondary-foreground: 0, 0%, 100%;
     --muted: 220 14% 96%;
     --muted-foreground: 220 10% 45%;
     --accent: 142 76% 45%;
@@ -28,8 +28,8 @@
     --radius: 0.75rem;
     
     /* Chat specific */
-    --chat-bubble-sent: 217 91% 60%;
-    --chat-bubble-received: 220 14% 96%;
+    --chat-bubble-sent: 142, 70%, 38%;
+    --chat-bubble-received: 181, 90%, 20%;
     --online: 142 76% 45%;
     
     /* Sidebar */

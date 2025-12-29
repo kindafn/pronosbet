@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Send } from 'lucide-react';
+import { Send, ChevronDown, Smile, Paperclip, Mic } from 'lucide-react';
 import { Message, ChatRoom } from '@/hooks/useChat';
 import { MessageBubble } from './MessageBubble';
 
@@ -16,28 +15,77 @@ interface ChatAreaProps {
 export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: ChatAreaProps) => {
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Scroll vers le bas quand les messages changent
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newMessage.trim() || sending) return;
+  // Scroll vers le bas quand l'input est focus (clavier ouvert)
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
 
-    setSending(true);
-    await onSendMessage(newMessage);
-    setNewMessage('');
-    setSending(false);
+    const handleFocus = () => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    };
+
+    el.addEventListener('focus', handleFocus);
+    return () => el.removeEventListener('focus', handleFocus);
+  }, []);
+
+  const autoResizeTextarea = () => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = '0px';
+    const next = Math.min(el.scrollHeight, 120); // max 4 lignes
+    el.style.height = `${next}px`;
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewMessage(e.target.value);
+    autoResizeTextarea();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e);
+      void handleSubmit(e as unknown as React.FormEvent);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const content = newMessage.trim();
+    if (!content || sending) return;
+
+    setSending(true);
+    await onSendMessage(content);
+    setNewMessage('');
+    setSending(false);
+
+    // Reset hauteur du textarea
+    const el = textareaRef.current;
+    if (el) {
+      el.style.height = '40px';
+    }
+
+    // Scroll en bas
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   };
 
@@ -56,75 +104,88 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-background min-h-0">
+    <div className="flex flex-col h-screen bg-background">
       {/* Header */}
-      <div className="sticky top-0 z-10 h-17 flex items-center px-6 bg-white">
-        <div className="flex items-center gap-3">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-primary/10 rounded-xl flex items-center justify-center">
-            <img
-              src="/logo.png"
-              alt="Logo"
-              className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
-            />
-          </div>
-          <div>
-            <h2 className="font-display font-semibold text-foreground">{room.name}</h2>
-            {room.description && (
-              <p className="text-xs text-muted-foreground">{room.description}</p>
-            )}
-          </div>
-        </div>
+      <div className="flex items-center px-4 py-2 bg-white border-b border-border">
+        <h2 className="font-display font-semibold text-foreground">{room.name}</h2>
+        {room.description && (
+          <p className="ml-2 text-xs text-muted-foreground">{room.description}</p>
+        )}
       </div>
+      
+     {/* Messages */}
+	<div
+	
+	 className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-2 relative 
+                max-h-[calc(100vh-160px)] md:max-h-full bg-whatsapp text-white"
+     	ref={scrollRef}>
 
-      {/* Messages (défilement) */}
-      <div
-        className="flex-1 p-6 overflow-y-auto"
-        ref={scrollRef}
-        onScroll={(e) => {
-          if (e.currentTarget.scrollTop === 0) {
-            // Charger plus d'anciens messages si besoin
-            // loadOlderMessages();
-          }
-        }}
-      >
-        {loading ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <p className="text-muted-foreground">Aucun message pour l'instant</p>
-              <p className="text-sm text-muted-foreground mt-1">Soyez le premier à écrire !</p>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6 px-4">
-            {messages.map((message) => (
-              <MessageBubble
-                key={message.id}
-                message={message}
-                isOwn={message.user_id === userId}
-              />
-            ))}
-          </div>
+	  {loading ? (
+	    <div className="flex items-center justify-center h-full">
+	      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+	    </div>
+	  ) : messages.length === 0 ? (
+	    <div className="flex items-center justify-center h-full">
+	      <p className="text-muted-foreground text-xs sm:text-sm">
+		Aucun message pour l'instant
+	      </p>
+	    </div>
+	  ) : (
+	    <>
+	      {messages.map((message) => (
+		<MessageBubble
+		  key={message.id}
+		  message={message}
+		  isOwn={message.user_id === userId}
+		/>
+	      ))}
+
+            {/* Flèche vers le bas */}
+            <button
+              onClick={scrollToBottom}
+              className="absolute bottom-4 right-4 bg-primary text-white rounded-full p-3 shadow-lg hover:bg-primary/80 transition"
+              aria-label="Scroll to bottom"
+            >
+              <ChevronDown className="w-5 h-5" />
+            </button>
+          </>
         )}
       </div>
 
-      {/* Input figé en bas */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-border bg-white z-50">
-        <form onSubmit={handleSubmit} className="flex gap-3 justify-center">
-          <Input
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={` Envoyer un message dans ${room.name}...`}
-            className="w-full md:w-[70%] ml-auto text-center"
-            disabled={sending}
-          />
-          <Button type="submit" disabled={sending || !newMessage.trim()}>
-            <Send className="w-4 h-4" />
-          </Button>
+      {/* Barre d'entrée */}
+      <div className="px-2 py-2 bg-white border-t border-border">
+        <form onSubmit={handleSubmit} className="flex items-end gap-2 justify-center">
+          <div className="flex items-center gap-2 w-full max-w-md bg-muted/50 rounded-full px-3 py-2">
+            <button type="button" className="text-muted-foreground hover:text-foreground">
+              <Smile className="w-5 h-5" />
+            </button>
+
+            <textarea
+              ref={textareaRef}
+              value={newMessage}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              placeholder={`Message à ${room.name}`}
+              rows={1}
+              className="flex-1 resize-none bg-transparent outline-none text-sm leading-6 max-h-[120px]"
+              style={{ height: '40px' }}
+              
+            />
+
+            <button type="button" className="text-muted-foreground hover:text-foreground">
+              <Paperclip className="w-5 h-5" />
+            </button>
+          </div>
+
+          {newMessage.trim().length > 0 ? (
+            <Button type="submit" disabled={sending} className="rounded-full px-4 h-10">
+              <Send className="w-5 h-5" />
+            </Button>
+          ) : (
+            <Button type="button" className="rounded-full px-4 h-10" aria-label="Micro">
+              <Mic className="w-5 h-5" />
+            </Button>
+          )}
         </form>
       </div>
     </div>

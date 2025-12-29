@@ -17,7 +17,7 @@ interface ChatSidebarProps {
   onCreateRoom: (name: string, description: string) => Promise<void>;
   onSignOut: () => void;
   username: string;
-  closeSidebar?: () => void; // 👈 ajouté pour bouton X et auto-fermeture
+  closeSidebar?: () => void; // 👈 utilisé pour bouton X et auto-fermeture
 }
 
 export const ChatSidebar = ({
@@ -27,7 +27,7 @@ export const ChatSidebar = ({
   onCreateRoom,
   onSignOut,
   username,
-  closeSidebar, // 👈 utilisé dans le JSX
+  closeSidebar,
 }: ChatSidebarProps) => {
   const [newRoomName, setNewRoomName] = useState("");
   const [newRoomDescription, setNewRoomDescription] = useState("");
@@ -51,14 +51,14 @@ export const ChatSidebar = ({
   };
 
   return (
-    <div className="w-full md:w-72 bg-sidebar border-r border-border flex flex-col h-full">
+  
+    <div className="w-full md:w-72 bg-sidebar flex flex-col h-screen md:border-r-2 md:border-red-600 overflow-y-auto">
       {/* Header fixé */}
-	<div className="sticky top-0 z-10 p-4 border-b border-border flex justify-between items-center bg-sidebar">
+      <div className="sticky top-0 z-10 p-4 border-b border-border flex justify-between items-center bg-sidebar">
         <div className="flex items-center gap-3">
-        <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-xl flex items-center justify-center overflow-hidden">
-	  <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-	</div>
-
+          <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-xl flex items-center justify-center overflow-hidden">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+          </div>
           <div>
             <h1 className="font-display font-semibold text-foreground">ZP</h1>
             <p className="text-xs text-muted-foreground">🎯 Zone Parieurs</p>
@@ -76,7 +76,7 @@ export const ChatSidebar = ({
         )}
       </div>
 
-      {/* Rooms List */}
+      {/* Liste des salons */}
       <div className="flex-1 flex flex-col">
         <div className="p-4 flex items-center justify-between">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -159,7 +159,7 @@ export const ChatSidebar = ({
         </ScrollArea>
       </div>
 
-      {/* User Section */}
+      {/* Section utilisateur */}
       <div className="p-4 border-t border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
