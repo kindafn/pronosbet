@@ -52,7 +52,7 @@ export const ChatSidebar = ({
 
   return (
   
-    <div className="w-full md:w-72 bg-sidebar flex flex-col h-screen md:border-r-2 md:border overflow-y-auto">
+    <div className="w-full md:w-72 bg-sidebar flex flex-col h-[90vh] sm:h-[85vh] md:h-screen md:border-r-2 md:border overflow-y-auto">
       {/* Header fixé */}
       <div className="sticky top-0 z-10 p-4 border-b border-border flex justify-between items-center bg-sidebar">
         <div className="flex items-center gap-3">

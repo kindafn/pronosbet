@@ -105,7 +105,7 @@ export const ChatArea = ({ room, messages, loading, userId, onSendMessage }: Cha
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+  <div className="flex flex-col h-[85vh] sm:h-[85vh] md:h-screen bg-background">
       {/* Header */}
       <div className="flex items-center px-4 py-5 bg-white border-b border-border">
         <h2 className="font-display font-semibold text-foreground">{room.name}</h2>
