@@ -42,17 +42,31 @@ export const MessageBubble = ({ message, isOwn }: MessageBubbleProps) => {
           </span>
           <span className="text-[10px] sm:text-xs text-muted-foreground">{time}</span>
         </div>
+
+        {/* Bubble */}
         <div
           className={cn(
-            "px-2 sm:px-4 py-1 sm:py-2 rounded-xl sm:rounded-2xl",
+            "px-2 sm:px-4 py-1 sm:py-2 rounded-xl sm:rounded-2xl space-y-2",
             isOwn
               ? "bg-chat-sent text-primary-foreground rounded-tr-md"
               : "bg-chat-received text-secondary-foreground rounded-tl-md"
           )}
         >
-          <p className="text-xs sm:text-sm whitespace-pre-wrap break-words leading-relaxed">
-            {message.content}
-          </p>
+          {/* Texte */}
+          {message.content && (
+            <p className="text-xs sm:text-sm whitespace-pre-wrap break-words leading-relaxed">
+              {message.content}
+            </p>
+          )}
+
+          {/* Image */}
+          {message.image_url && (
+            <img
+              src={message.image_url}
+              alt="uploaded"
+              className="rounded-lg max-h-60 object-cover"
+            />
+          )}
         </div>
       </div>
     </div>

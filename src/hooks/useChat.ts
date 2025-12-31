@@ -7,6 +7,7 @@ export interface Message {
   user_id: string;
   content: string;
   created_at: string;
+  image_url?: string;   // <-- ajout pour gérer les images
   username?: string;
 }
 
@@ -41,7 +42,7 @@ export const useChat = (roomId: string | null) => {
     setLoading(true);
     const { data: messagesData, error } = await supabase
       .from('messages')
-      .select('*')
+      .select('*')   // <-- récupère aussi image_url
       .eq('room_id', roomId)
       .order('created_at', { ascending: true });
 
@@ -65,16 +66,17 @@ export const useChat = (roomId: string | null) => {
     setLoading(false);
   }, [roomId]);
 
-  // Send a message
-  const sendMessage = async (content: string, userId: string) => {
-    if (!roomId || !content.trim()) return;
+  // Send a message (texte + image)
+  const sendMessage = async (content: string, userId: string, imageUrl?: string) => {
+    if (!roomId || (!content.trim() && !imageUrl)) return;
 
     const { error } = await supabase
       .from('messages')
       .insert({
         room_id: roomId,
         user_id: userId,
-        content: content.trim()
+        content: content.trim(),
+        image_url: imageUrl || null   // <-- ajout image
       });
 
     return { error };
@@ -136,6 +138,7 @@ export const useChat = (roomId: string | null) => {
             user_id: payload.new.user_id,
             content: payload.new.content,
             created_at: payload.new.created_at,
+            image_url: payload.new.image_url || null,   // <-- ajout image
             username: profileData?.username || 'Utilisateur'
           };
 
@@ -158,3 +161,4 @@ export const useChat = (roomId: string | null) => {
     fetchRooms
   };
 };
+

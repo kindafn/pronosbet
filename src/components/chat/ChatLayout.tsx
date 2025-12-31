@@ -47,13 +47,24 @@ export const ChatLayout = () => {
     }
   };
 
-  const handleSendMessage = async (content: string) => {
-    if (!user?.id) return;
-    const { error } = await sendMessage(content, user.id);
-    if (error) {
-      toast.error("Erreur lors de l'envoi du message");
-    }
-  };
+
+const handleSendMessage = async (content: string, imageUrl?: string) => {
+  if (!user?.id || !currentRoomId) return;
+
+  const { error } = await supabase
+    .from("messages")
+    .insert({
+      content,
+      image_url: imageUrl || null,   // <-- ajout de l'image
+      user_id: user.id,
+      room_id: currentRoomId,
+      username,                      // utile pour afficher le nom
+    });
+
+  if (error) {
+    toast.error("Erreur lors de l'envoi du message");
+  }
+};
 
   const handleCreateRoom = async (name: string, description: string) => {
     if (!user?.id) return;
@@ -111,6 +122,7 @@ export const ChatLayout = () => {
           userId={user?.id || ''}
           onSendMessage={handleSendMessage}
         />
+        
       </div>
     </div>
   );
