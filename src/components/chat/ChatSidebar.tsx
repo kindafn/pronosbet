@@ -61,7 +61,7 @@ export const ChatSidebar = ({
           </div>
           <div>
             <h1 className="font-display font-semibold text-foreground">ZP</h1>
-            <p className="text-xs text-muted-foreground">🎯 Zone Parieurs</p>
+            <p className="text-xs text-muted-foreground">🎯 Z anonyma</p>
           </div>
         </div>
 
